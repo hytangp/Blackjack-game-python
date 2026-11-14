@@ -49,11 +49,15 @@ while continue_playing_game:
         total_of_player_cards = 0
 
         dealers_card1 = deal_card()
-        dealers_all_cards = [dealers_card1]
+        dealers_card2 = deal_card()
+        dealers_all_cards = [dealers_card1, dealers_card2]
 
         if calculate_score(player_all_cards) == 0:
-            print_final_cards_and_score(player_all_cards, calculate_score(player_all_cards), dealers_all_cards, calculate_score(dealers_all_cards))
+            print_final_cards_and_score(player_all_cards, calculate_score(player_all_cards), [dealers_card1], calculate_score([dealers_card1]))
             print("Win with a Blackjack 😎")
+        elif calculate_score(dealers_all_cards) == 0:
+            print_final_cards_and_score(player_all_cards, calculate_score(player_all_cards), dealers_all_cards, calculate_score(dealers_all_cards))
+            print("Lose, opponent has Blackjack 😱")
         else:
             # Players dealing
             while total_of_player_cards < 21 and player_want_to_continue_dealing:
@@ -78,29 +82,22 @@ while continue_playing_game:
                         player_want_to_continue_dealing = False
 
             # Computers dealing
-            play_continue_card = deal_card()
-            dealers_all_cards.append(play_continue_card)
-
             total_of_dealer_cards = calculate_score(dealers_all_cards)
 
-            if total_of_dealer_cards == 0 and total_of_player_cards != 21:
-                print_final_cards_and_score(player_all_cards, total_of_player_cards, dealers_all_cards, total_of_dealer_cards)
-                print("Lose, opponent has Blackjack 😱")
-            else:
-                while total_of_dealer_cards < 21 and dealer_want_to_continue_dealing:
-                    dealer_want_to_continue_or_not = random.choice(dealer_choices_to_continue)
+            while total_of_dealer_cards < 21 and dealer_want_to_continue_dealing:
+                dealer_want_to_continue_or_not = random.choice(dealer_choices_to_continue)
 
-                    if dealer_want_to_continue_or_not:
-                        play_continue_card = deal_card()
-                        dealers_all_cards.append(play_continue_card)
+                if dealer_want_to_continue_or_not:
+                    play_continue_card = deal_card()
+                    dealers_all_cards.append(play_continue_card)
 
-                        if play_continue_card == 11 and (calculate_score([total_of_dealer_cards,  play_continue_card]) > 21):
-                            total_of_dealer_cards += 1
-                        else:
-                            total_of_dealer_cards = calculate_score(dealers_all_cards)
+                    if play_continue_card == 11 and (calculate_score([total_of_dealer_cards,  play_continue_card]) > 21):
+                        total_of_dealer_cards += 1
                     else:
-                        dealer_want_to_continue_dealing = False
+                        total_of_dealer_cards = calculate_score(dealers_all_cards)
+                else:
+                    dealer_want_to_continue_dealing = False
 
-                print_final_cards_and_score(player_all_cards, total_of_player_cards, dealers_all_cards, total_of_dealer_cards)
+            print_final_cards_and_score(player_all_cards, total_of_player_cards, dealers_all_cards, total_of_dealer_cards)
 
-                compare(total_of_player_cards, total_of_dealer_cards)
+            compare(total_of_player_cards, total_of_dealer_cards)
