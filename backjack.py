@@ -30,7 +30,7 @@ def compare(player_cards_total, dealer_cards_total):
 
 def print_final_cards_and_score(player_cards, player_cards_total, dealers_cards, dealer_cards_total):
     print(f"   Your final hand: {player_cards} , final score: {player_cards_total}")
-    print(f"   Computer's final hand: {dealers_cards}, final score: {total_of_dealer_cards}")
+    print(f"   Computer's final hand: {dealers_cards}, final score: {dealer_cards_total}")
 
 while continue_playing_game:
     play_or_no = input("Do you want to play the game of Blackjack? type 'y' or 'n': ")
@@ -53,9 +53,13 @@ while continue_playing_game:
         dealers_all_cards = [dealers_card1, dealers_card2]
 
         if calculate_score(player_all_cards) == 0:
+            print(f"    Your cards: {player_all_cards}, current score: {calculate_score(player_all_cards)}")
+            print(f"    Computer's first card: {dealers_card1}")
             print_final_cards_and_score(player_all_cards, calculate_score(player_all_cards), [dealers_card1], calculate_score([dealers_card1]))
             print("Win with a Blackjack 😎")
         elif calculate_score(dealers_all_cards) == 0:
+            print(f"    Your cards: {player_all_cards}, current score: {calculate_score(player_all_cards)}")
+            print(f"    Computer's first card: {dealers_card1}")
             print_final_cards_and_score(player_all_cards, calculate_score(player_all_cards), dealers_all_cards, calculate_score(dealers_all_cards))
             print("Lose, opponent has Blackjack 😱")
         else:
@@ -68,6 +72,8 @@ while continue_playing_game:
                     play_continue_card = None
 
                 if play_continue_card is not None and play_continue_card == 11 and (calculate_score([total_of_player_cards, play_continue_card]) > 21):
+                    player_all_cards.remove(play_continue_card)
+                    player_all_cards.append(1)
                     total_of_player_cards += 1
                 else:
                     total_of_player_cards = calculate_score(player_all_cards)
@@ -85,13 +91,13 @@ while continue_playing_game:
             total_of_dealer_cards = calculate_score(dealers_all_cards)
 
             while total_of_dealer_cards < 21 and dealer_want_to_continue_dealing:
-                dealer_want_to_continue_or_not = random.choice(dealer_choices_to_continue)
-
-                if dealer_want_to_continue_or_not:
+                if total_of_dealer_cards < 17:
                     play_continue_card = deal_card()
                     dealers_all_cards.append(play_continue_card)
 
-                    if play_continue_card == 11 and (calculate_score([total_of_dealer_cards,  play_continue_card]) > 21):
+                    if play_continue_card == 11 and (calculate_score([total_of_dealer_cards, play_continue_card]) > 21):
+                        dealers_all_cards.remove(play_continue_card)
+                        dealers_all_cards.append(1)
                         total_of_dealer_cards += 1
                     else:
                         total_of_dealer_cards = calculate_score(dealers_all_cards)
